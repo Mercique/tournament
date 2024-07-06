@@ -5,5 +5,26 @@
   padding: 0;
   box-sizing: border-box;
   font-family: sans-serif;
+  color: #fff;
   background-color: #111112;
+}
+
+p {
+  background-color: transparent;
+}
+
+.center {
+  padding-left: calc(50% - 700px);
+  padding-right: calc(50% - 700px);
+}
+
+.App__wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.App__wrapper-top {
+  flex-grow: 1;
+  position: relative;
 }
