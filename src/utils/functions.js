@@ -12,3 +12,7 @@ export const shuffle = (array) => {
     ];
   }
 };
+
+export const getRandomInt = (max) => {
+  return Math.floor(Math.random() * max);
+};

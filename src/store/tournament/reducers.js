@@ -1,4 +1,4 @@
-import { ADD_GROUPS, ADD_TEAMS } from "./actions";
+import { ADD_GROUPS, ADD_MATCHES, ADD_TEAMS } from "./actions";
 
 const initialState = {
   groupNames: [
@@ -21,6 +21,21 @@ export const tournamentReducer = (state = initialState, action) => {
       return {
         ...state,
         groups: action.payload,
+      };
+    case ADD_MATCHES:
+      if (typeof state.matches[action.payload.tour] === "undefined") {
+        state.matches[action.payload.tour] = [];
+      }
+
+      return {
+        ...state,
+        matches: {
+          ...state.matches,
+          [action.payload.tour]: [
+            ...state.matches[action.payload.tour],
+            action.payload.match,
+          ],
+        },
       };
     default:
       return state;
