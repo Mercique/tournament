@@ -1,4 +1,5 @@
 import style from "./Group.module.css";
+import { LastMatches } from "../LastMatches/LastMatches";
 
 export const Group = ({ group }) => {
   return (
@@ -28,7 +29,11 @@ export const Group = ({ group }) => {
             <span>{group[team].stat.missed}</span>
           </div>
           <span className={style.groupTeamPoints}>{group[team].stat.points}</span>
-          <span className={style.groupTeamLastGames}>o o o</span>
+          <div className={style.groupTeamLastGames}>
+            {Object.values(group[team].lastMatches).map((value, idx) => (
+              <LastMatches value={value} key={idx} />
+            ))}
+          </div>
         </div>
       ))}
     </div>

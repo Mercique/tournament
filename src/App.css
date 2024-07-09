@@ -5,8 +5,12 @@
   padding: 0;
   box-sizing: border-box;
   font-family: sans-serif;
+  font-size: 18px;
   color: #fff;
-  background-color: #111112;
+}
+
+h2 {
+  font-size: 22px;
 }
 
 p, b {
@@ -20,6 +24,10 @@ input {
 .center {
   padding-left: calc(50% - 700px);
   padding-right: calc(50% - 700px);
+}
+
+.App {
+  background-color: #111112;
 }
 
 .App__wrapper {

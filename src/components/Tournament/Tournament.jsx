@@ -26,16 +26,16 @@ export const Tournament = () => {
       for (let i = 0; i < groupTeams.length / 2; i++) {
         let match = {};
 
+        const homeTeam = {...group[groupTeams[i]]};
+        const visitTeam = {...group[groupTeams[groupTeams.length - 1 - i]]};
+
+        homeTeam.lastMatches[`match-${round + 1}`] = 0;
+        visitTeam.lastMatches[`match-${round + 1}`] = 0;
+
         if (getRandomInt(2)) {
-          match = [
-            {...group[groupTeams[i]]},
-            {...group[groupTeams[groupTeams.length - 1 - i]]},
-          ];
+          match = [homeTeam, visitTeam];
         } else {
-          match = [
-            {...group[groupTeams[groupTeams.length - 1 - i]]},
-            {...group[groupTeams[i]]},
-          ];
+          match = [visitTeam, homeTeam];
         }
 
         dispatch(addMatches({ tour: `Tour-${round + 1}`, match: match }));
@@ -51,9 +51,8 @@ export const Tournament = () => {
     let teams = [
       "Россия", "Аргентина", "Германия", "Испания",
       "Англия", "Италия", "Франция", "Португалия",
-      "asd", "sdf", "vbn", "fgh",
     ];
-    let count = 1;
+    let id = 1;
 
     shuffle(teams);
     dispatch(addTeams(teams));
@@ -62,8 +61,8 @@ export const Tournament = () => {
       groupStage[groupNames[group]] = {};
 
       for (let team = group * teamsInGroup; team < group * teamsInGroup + teamsInGroup; team++) {
-        groupStage[groupNames[group]][`team-${count}`] = {
-          id: count,
+        groupStage[groupNames[group]][`team-${id}`] = {
+          id,
           name: teams[team],
           groupName: groupNames[group],
           stat: {
@@ -75,9 +74,10 @@ export const Tournament = () => {
             missed: 0,
             points: 0,
           },
+          lastMatches: {},
         };
         
-        count++;
+        id++;
       }
 
       handleGetMatches(groupStage[groupNames[group]]);
@@ -88,8 +88,8 @@ export const Tournament = () => {
 
   return (
     <div className={style.tournament}>
-      <button onClick={handleGetTournament}>data</button>
-      <button onClick={() => console.log(tournament)}>tournament</button>
+      <button type="button" style={{ color: "black" }} onClick={handleGetTournament}>data</button>
+      <button type="button" style={{ color: "black" }} onClick={() => console.log(tournament)}>tournament</button>
       {!Object.values(tournament.groups).length ||
         <div className={style.tournamentStage}>
           <Table />

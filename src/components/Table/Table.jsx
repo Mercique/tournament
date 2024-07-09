@@ -8,7 +8,7 @@ export const Table = () => {
 
   return (
     <div className={style.table}>
-      <h3 className={style.tableTitle}>Турнирная таблица</h3>
+      <h2 className={style.tableTitle}>Турнирная таблица</h2>
       {Object.keys(groups).map((name, idx) => (
         <div key={idx}>
           <h4 className={style.groupTitle}>Группа {name}</h4>

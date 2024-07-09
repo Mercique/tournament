@@ -8,12 +8,12 @@ export const Qualification = () => {
 
   return (
     <div className={style.qualification}>
-      <h3>Квалификация</h3>
+      <h2>Квалификация</h2>
       {Object.keys(tours).map((tourName, idx) => (
         <div key={idx}>
-          <h4 className={style.tourName}>Тур {tourName.slice(-1)}</h4>
-          {tours[tourName].map((match, idx) => (
-            <Match match={match} key={idx} />
+          <h4 className={style.tourName}>Тур {idx + 1}</h4>
+          {tours[tourName].map((match, key) => (
+            <Match match={match} tour={idx + 1} key={key} />
           ))}
         </div>
       ))}

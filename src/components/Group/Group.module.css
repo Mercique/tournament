@@ -4,8 +4,13 @@
   align-items: center;
 }
 
+.groupRow:first-child span {
+  font-size: 14px;
+  color: #808081;
+}
+
 .groupRow:not(:last-child):not(:first-child) {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #343436;
 }
 
 .groupTeamCount {
@@ -22,13 +27,17 @@
 }
 
 .groupTeamPoints {
-  width: 50px;
+  width: 55px;
   text-align: center;
 }
 
 .groupTeamLastGames {
   width: 90px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-right: 10px;
 }
 
 .dash {
