@@ -13,12 +13,19 @@ h2 {
   font-size: 22px;
 }
 
-p, b {
+p,
+b {
   background-color: transparent;
 }
 
 input {
   all: unset;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .center {

@@ -13,7 +13,7 @@ export const Qualification = () => {
         <div key={idx}>
           <h4 className={style.tourName}>Тур {idx + 1}</h4>
           {tours[tourName].map((match, key) => (
-            <Match match={match} tour={idx + 1} key={key} />
+            <Match match={match} tourName={tourName} tourNum={idx} matchNum={key} key={key} />
           ))}
         </div>
       ))}

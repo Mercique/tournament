@@ -25,9 +25,11 @@ export const Tournament = () => {
     for (let round = 0; round < numRounds; round++) {
       for (let i = 0; i < groupTeams.length / 2; i++) {
         let match = {};
+        const homeTeam = {...group[groupTeams[i]], scored: "", missed: ""};
+        const visitTeam = {...group[groupTeams[groupTeams.length - 1 - i]], scored: "", missed: ""};
 
-        const homeTeam = {...group[groupTeams[i]]};
-        const visitTeam = {...group[groupTeams[groupTeams.length - 1 - i]]};
+        delete homeTeam.stat;
+        delete visitTeam.stat;
 
         homeTeam.lastMatches[`match-${round + 1}`] = 0;
         visitTeam.lastMatches[`match-${round + 1}`] = 0;
@@ -38,7 +40,7 @@ export const Tournament = () => {
           match = [visitTeam, homeTeam];
         }
 
-        dispatch(addMatches({ tour: `Tour-${round + 1}`, match: match }));
+        dispatch(addMatches({ tour: `Tour-${round + 1}`, match }));
       }
 
       groupTeams.splice(1, 0, groupTeams.pop());
@@ -49,8 +51,14 @@ export const Tournament = () => {
     let groupStage = {};
     const teamsInGroup = 4;
     let teams = [
-      "Россия", "Аргентина", "Германия", "Испания",
-      "Англия", "Италия", "Франция", "Португалия",
+      "Россия",
+      "Аргентина",
+      "Германия",
+      "Испания",
+      "Англия",
+      "Италия",
+      "Франция",
+      "Португалия",
     ];
     let id = 1;
 
@@ -60,7 +68,11 @@ export const Tournament = () => {
     for (let group = 0; group < teams.length / teamsInGroup; group++) {
       groupStage[groupNames[group]] = {};
 
-      for (let team = group * teamsInGroup; team < group * teamsInGroup + teamsInGroup; team++) {
+      for (
+        let team = group * teamsInGroup;
+        team < group * teamsInGroup + teamsInGroup;
+        team++
+      ) {
         groupStage[groupNames[group]][`team-${id}`] = {
           id,
           name: teams[team],
@@ -76,7 +88,7 @@ export const Tournament = () => {
           },
           lastMatches: {},
         };
-        
+
         id++;
       }
 
@@ -88,14 +100,26 @@ export const Tournament = () => {
 
   return (
     <div className={style.tournament}>
-      <button type="button" style={{ color: "black" }} onClick={handleGetTournament}>data</button>
-      <button type="button" style={{ color: "black" }} onClick={() => console.log(tournament)}>tournament</button>
-      {!Object.values(tournament.groups).length ||
+      <button
+        type="button"
+        style={{ color: "black" }}
+        onClick={handleGetTournament}
+      >
+        data
+      </button>
+      <button
+        type="button"
+        style={{ color: "black" }}
+        onClick={() => console.log(tournament)}
+      >
+        tournament
+      </button>
+      {!Object.values(tournament.groups).length || (
         <div className={style.tournamentStage}>
           <Table />
           <Qualification />
         </div>
-      }
+      )}
     </div>
   );
 };

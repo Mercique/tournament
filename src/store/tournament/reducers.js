@@ -40,6 +40,7 @@ export const tournamentReducer = (state = initialState, action) => {
     case UPDATE_GROUPS:
       for (let team = 0; team < action.payload.length; team++) {
         state.groups[action.payload[team].groupName][`team-${action.payload[team].id}`].lastMatches[action.payload[team].match[0]] = action.payload[team].match[1];
+        
         for (let key in action.payload[team].stat) {
           state.groups[action.payload[team].groupName][`team-${action.payload[team].id}`].stat[key] += action.payload[team].stat[key];
         }
@@ -47,8 +48,14 @@ export const tournamentReducer = (state = initialState, action) => {
 
       return {...state};
     case UPDATE_MATCHES:
-      //console.log(action.payload);
-      return state;
+      console.log(action.payload);
+      for (let team = 0; team < action.payload.length; team++) {
+        console.log(state.matches[action.payload[team].tour[0]][action.payload[team].tour[1]][team]);
+        state.matches[action.payload[team].tour[0]][action.payload[team].tour[1]][team].scored = action.payload[team].stat.scored;
+        state.matches[action.payload[team].tour[0]][action.payload[team].tour[1]][team].missed = action.payload[team].stat.missed;
+      }
+
+      return {...state};
     default:
       return state;
   }
