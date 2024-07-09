@@ -1,0 +1,33 @@
+.match {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 40px;
+}
+
+.match span {
+  width: calc(50% - 30px);
+}
+
+.teamHome {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.matchScore {
+  width: 60px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  background-color: #242426;
+}
+
+.matchScore input {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+

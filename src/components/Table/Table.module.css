@@ -1,10 +1,9 @@
-.qualification {
-  width: 500px;
+.table {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.tourName {
+.groupTitle {
   padding-bottom: 10px;
 }

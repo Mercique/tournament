@@ -9,8 +9,12 @@
   background-color: #111112;
 }
 
-p {
+p, b {
   background-color: transparent;
+}
+
+input {
+  all: unset;
 }
 
 .center {

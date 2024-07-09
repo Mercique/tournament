@@ -1,4 +1,4 @@
-import { ADD_GROUPS, ADD_MATCHES, ADD_TEAMS } from "./actions";
+import { ADD_GROUPS, ADD_MATCHES, ADD_TEAMS, UPDATE_GROUPS } from "./actions";
 
 const initialState = {
   groupNames: [
@@ -37,6 +37,14 @@ export const tournamentReducer = (state = initialState, action) => {
           ],
         },
       };
+    case UPDATE_GROUPS:
+      for (let team = 0; team < action.payload.length; team++) {
+        for (let key in action.payload[team].stat) {
+          state.groups[action.payload[team].groupName][`team-${action.payload[team].id}`].stat[key] += action.payload[team].stat[key];
+        }
+      }
+
+      return {...state};
     default:
       return state;
   }

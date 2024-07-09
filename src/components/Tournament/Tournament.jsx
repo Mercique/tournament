@@ -47,29 +47,34 @@ export const Tournament = () => {
 
   const handleGetTournament = () => {
     let groupStage = {};
+    const teamsInGroup = 4;
     let teams = [
       "Россия", "Аргентина", "Германия", "Испания",
       "Англия", "Италия", "Франция", "Португалия",
+      "asd", "sdf", "vbn", "fgh",
     ];
     let count = 1;
 
     shuffle(teams);
     dispatch(addTeams(teams));
 
-    for (let group = 0; group < teams.length / 4; group++) {
+    for (let group = 0; group < teams.length / teamsInGroup; group++) {
       groupStage[groupNames[group]] = {};
 
-      for (let team = group * 4; team < group * 4 + 4; team++) {
+      for (let team = group * teamsInGroup; team < group * teamsInGroup + teamsInGroup; team++) {
         groupStage[groupNames[group]][`team-${count}`] = {
           id: count,
           name: teams[team],
-          games: 0,
-          wins: 0,
-          draws: 0,
-          loss: 0,
-          scored: 0,
-          missed: 0,
-          points: 0,
+          groupName: groupNames[group],
+          stat: {
+            games: 0,
+            wins: 0,
+            draws: 0,
+            loss: 0,
+            scored: 0,
+            missed: 0,
+            points: 0,
+          },
         };
         
         count++;
