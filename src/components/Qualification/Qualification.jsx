@@ -1,20 +1,16 @@
 import { useSelector } from "react-redux";
 import style from "./Qualification.module.css";
-import { selectMatches } from "../../store/tournament/selectors";
-import { Match } from "../Match/Match";
+import { selectQualification } from "../../store/tournament/selectors";
+import { Stage } from "../Stage/Stage";
 
 export const Qualification = () => {
-  const tours = useSelector(selectMatches);
+  const qualification = useSelector(selectQualification);
 
   return (
     <div className={style.qualification}>
-      <h2>Квалификация</h2>
-      {Object.keys(tours).map((tourName, idx) => (
-        <div key={idx}>
-          <h4 className={style.tourName}>Тур {idx + 1}</h4>
-          {tours[tourName].map((match, key) => (
-            <Match match={match} tourName={tourName} tourNum={idx} matchNum={key} key={key} />
-          ))}
+      {Object.keys(qualification).map((stageName, idx) => (
+        <div className={style.qualificationStage} key={idx}>
+          {!Object.values(qualification[stageName].data).length || <Stage stage={qualification[stageName]} />}
         </div>
       ))}
     </div>

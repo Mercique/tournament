@@ -85,6 +85,7 @@ export const Tournament = () => {
             scored: 0,
             missed: 0,
             points: 0,
+            homeLoss: 0,
           },
           lastMatches: {},
         };
