@@ -5,7 +5,7 @@ export const Tour = ({ tourMatches }) => {
   return (
     <div className={style.tour}>
       {tourMatches.map((match, idx) => (
-        <Match match={match} key={idx} />
+        <Match match={match} matchId={idx} key={idx} />
       ))}
     </div>
   );

@@ -4,61 +4,96 @@ import { updateGroups, updateMatches } from "../../store/tournament/actions";
 import { useDispatch } from "react-redux";
 import { getRandomInt } from "../../utils/functions";
 
-export const Match = ({ match }) => {
-  const [homeScore, setHomeScore] = useState(match[0].scored);
-  const [visitScore, setVisitScore] = useState(match[1].scored);
+export const Match = ({ match, matchId }) => {
   const dispatch = useDispatch();
+  const [homeScore, setHomeScore] = useState(match.teamSide.home.stat.scored);
+  const [visitScore, setVisitScore] = useState(match.teamSide.visit.stat.scored);
 
-  const handleSetStat = () => {
-    const homeTeam = {id: match[0].id, groupName: match[0].groupName, stat: {}, side: "home"};
-    const visitTeam = {id: match[1].id, groupName: match[1].groupName, stat: {}, side: "visit"};
+  const handleSetStat = (status) => {
+    const matchInfo = {
+      ...match,
+      matchId,
+      teamSide: {
+        home: {},
+        visit: {},
+      },
+    };
 
-    if (homeScore > visitScore) {
-      homeTeam.stat.games = 1;
-      homeTeam.stat.wins = 1;
-      homeTeam.stat.scored = homeScore;
-      homeTeam.stat.missed = visitScore;
-      homeTeam.stat.points = 3;
+    let count = 0;
+    for (let side in match.teamSide) {
+      matchInfo.teamSide[side] = {
+        ...match.teamSide[side],
+        stat: {
+          games: 1,
+          scored: count ? visitScore : homeScore,
+          missed: count ? homeScore : visitScore,
+        },
+      };
 
-      visitTeam.stat.games = 1;
-      visitTeam.stat.loss = 1;
-      visitTeam.stat.scored = visitScore;
-      visitTeam.stat.missed = homeScore;
-    } else if (homeScore === visitScore) {
-      homeTeam.stat.games = 1;
-      homeTeam.stat.draws = 1;
-      homeTeam.stat.scored = homeScore;
-      homeTeam.stat.missed = visitScore;
-      homeTeam.stat.points = 1;
-
-      visitTeam.stat.games = 1;
-      visitTeam.stat.draws = 1;
-      visitTeam.stat.scored = visitScore;
-      visitTeam.stat.missed = homeScore;
-      visitTeam.stat.points = 1;
-    } else {
-      visitTeam.stat.games = 1;
-      visitTeam.stat.wins = 1;
-      visitTeam.stat.scored = visitScore;
-      visitTeam.stat.missed = homeScore;
-      visitTeam.stat.points = 3;
-
-      homeTeam.stat.games = 1;
-      homeTeam.stat.loss = 1;
-      homeTeam.stat.homeLoss = 1;
-      homeTeam.stat.scored = homeScore;
-      homeTeam.stat.missed = visitScore;
+      count++;
     }
 
-    dispatch(updateGroups([homeTeam, visitTeam]));
-    dispatch(updateMatches([homeTeam, visitTeam]));
+    switch (status) {
+      case "win": {
+        matchInfo.teamSide.home.stat.wins = 1;
+        matchInfo.teamSide.home.stat.points = 3;
+        matchInfo.teamSide.home.status = "win";
+
+        matchInfo.teamSide.visit.stat.loss = 1;
+        matchInfo.teamSide.visit.status = "loss";
+        break;
+      }
+      case "draw": {
+        matchInfo.teamSide.home.stat.draws = 1;
+        matchInfo.teamSide.home.stat.points = 1;
+        matchInfo.teamSide.home.status = "draw";
+
+        matchInfo.teamSide.visit.stat.draws = 1;
+        matchInfo.teamSide.visit.stat.points = 1;
+        matchInfo.teamSide.visit.status = "draw";
+        break;
+      }
+      case "loss": {
+        matchInfo.teamSide.visit.stat.wins = 1;
+        matchInfo.teamSide.visit.stat.points = 3;
+        matchInfo.teamSide.visit.status = "win";
+
+        matchInfo.teamSide.home.stat.loss = 1;
+        matchInfo.teamSide.home.stat.homeLoss = 1;
+        matchInfo.teamSide.home.status = "loss";
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
+    dispatch(updateGroups(matchInfo));
+    dispatch(updateMatches(matchInfo));
   };
 
   useEffect(() => {
     if (homeScore !== "" && visitScore !== "") {
-      handleSetStat();
+      switch (match.stage) {
+        case "groupStage": {
+          if (homeScore > visitScore) {
+            handleSetStat("win");
+          } else if (homeScore === visitScore) {
+            handleSetStat("draw");
+          } else {
+            handleSetStat("loss");
+          }
+          break;
+        }
+        case "playOff": {
+          break;
+        }
+        default:{
+          break;
+        }
+      }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homeScore, visitScore]);
 
   const handleScore = () => {
@@ -69,24 +104,30 @@ export const Match = ({ match }) => {
   return (
     <div className={style.tour}>
       <div className={style.match}>
-        <span className={style.teamHome}>{match[0].name}</span>
+        <span className={style.teamHome}>{match.teamSide.home.name}</span>
         <div className={style.matchScore}>
           <input
             type="number"
-            id={match[0].id}
+            id={match.teamSide.home.id}
             value={homeScore}
             onChange={(e) => setHomeScore(+e.target.value)}
           />
           <b>:</b>
           <input
             type="number"
-            id={match[1].id}
+            id={match.teamSide.visit.id}
             value={visitScore}
             onChange={(e) => setVisitScore(+e.target.value)}
           />
         </div>
-        <span className={style.teamVisit}>{match[1].name}</span>
-        <button type="button" style={{ position: "absolute", right: "0", color: "#000" }} onClick={handleScore}>random</button>
+        <span className={style.teamVisit}>{match.teamSide.visit.name}</span>
+        <button
+          type="button"
+          style={{ position: "absolute", right: "0", color: "#000" }}
+          onClick={handleScore}
+        >
+          random
+        </button>
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ export const Qualification = () => {
     <div className={style.qualification}>
       {Object.keys(qualification).map((stageName, idx) => (
         <div className={style.qualificationStage} key={idx}>
-          {!Object.values(qualification[stageName].data).length || <Stage stage={qualification[stageName]} />}
+          {!Object.values(qualification[stageName].matches).length || <Stage stage={qualification[stageName]} />}
         </div>
       ))}
     </div>

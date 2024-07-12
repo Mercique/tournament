@@ -1,7 +1,22 @@
 import style from "./Group.module.css";
 import { LastMatches } from "../LastMatches/LastMatches";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectSettings } from "../../store/tournament/selectors";
 
 export const Group = ({ group }) => {
+  const settings = useSelector(selectSettings);
+
+  useEffect(() => {
+    const groupGames = Object.values(group).reduce((acc, cur) => acc + cur.stat.games, 0);
+    const length = settings.teamsInGroup - 1;
+
+    if (groupGames === settings.teamsInGroup * settings.rangeCircle * length) {
+      console.log(true);
+      // тут написать функцию создания сетки плей-офф
+    }
+  }, [group, settings.rangeCircle, settings.teamsInGroup]);
+
   return (
     <div className={style.group}>
       <div className={style.groupRow}>
@@ -30,8 +45,8 @@ export const Group = ({ group }) => {
           </div>
           <span className={style.groupTeamPoints}>{group[team].stat.points}</span>
           <div className={style.groupTeamLastGames}>
-            {Object.values(group[team].lastMatches).map((value, idx) => (
-              <LastMatches value={value} key={idx} />
+            {Object.values(group[team].lastMatches).map((status, idx) => (
+              <LastMatches status={status} key={idx} />
             ))}
           </div>
         </div>

@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react";
 import style from "./LastMatches.module.css";
 
-export const LastMatches = ({ value }) => {
+export const LastMatches = ({ status }) => {
   const [color, setColor] = useState("");
 
   useEffect(() => {
-    switch (value) {
-      case 1:
+    switch (status) {
+      case "win":
         setColor("#53b247");
         break;
-      case 2:
+      case "draw":
         setColor("#f9df59");
         break;
-      case 3:
+      case "loss":
         setColor("#f35c55");
         break;
       default:
         setColor("#242426");
         break;
     }
-  }, [value]);
+  }, [status]);
 
   return <div className={style.lastGame} style={{ backgroundColor: color }}></div>;
 };

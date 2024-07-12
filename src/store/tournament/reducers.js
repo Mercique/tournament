@@ -1,6 +1,10 @@
-import { ADD_GROUPS, ADD_MATCHES, ADD_TEAMS, UPDATE_GROUPS, UPDATE_MATCHES } from "./actions";
+import { ADD_GROUPS, ADD_MATCHES, ADD_SETTINGS, ADD_TEAMS, UPDATE_GROUPS, UPDATE_MATCHES } from "./actions";
 
 const initialState = {
+  settings: {
+    teamsInGroup: 4,
+    rangeCircle: 1,
+  },
   groupNames: [
     "A", "B", "C", "D", "E", "F", "G", "H",
     "I", "G", "K", "L", "M", "N", "O", "P",
@@ -10,17 +14,22 @@ const initialState = {
   qualification: {
     groupStage: {
       name: "Групповая стадия",
-      data: {},
+      matches: {},
     },
     playOff: {
       name: "Плей-офф",
-      data: {},
+      matches: {},
     },
   },
 };
 
 export const tournamentReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ADD_SETTINGS:
+      return {
+        ...state,
+        settings: action.payload,
+      };
     case ADD_TEAMS:
       return {
         ...state,
@@ -32,39 +41,43 @@ export const tournamentReducer = (state = initialState, action) => {
         groups: action.payload,
       };
     case ADD_MATCHES:
-      if (typeof state.qualification.groupStage.data[action.payload.tour] === "undefined") {
-        state.qualification.groupStage.data[action.payload.tour] = [];
+      if (!state.qualification[action.payload.stage].matches[action.payload.tourName]) {
+        state.qualification[action.payload.stage].matches[action.payload.tourName] = [];
       }
 
       return {
         ...state,
         qualification: {
           ...state.qualification,
-          groupStage: {
-            ...state.qualification.groupStage,
-            data: {
-              ...state.qualification.groupStage.data,
-              [action.payload.tour]: [
-                ...state.qualification.groupStage.data[action.payload.tour],
-                action.payload.match,
+          [action.payload.stage]: {
+            ...state.qualification[action.payload.stage],
+            matches: {
+              ...state.qualification[action.payload.stage].matches,
+              [action.payload.tourName]: [
+                ...state.qualification[action.payload.stage].matches[action.payload.tourName],
+                action.payload,
               ],
-            }
-          }
-        }
+            },
+          },
+        },
       };
     case UPDATE_GROUPS:
       let sortGroup = [];
-      console.log(action.payload);
-      for (let team = 0; team < action.payload.length; team++) {
-        //state.groups[action.payload[team].groupName][`team-${action.payload[team].id}`].lastMatches[action.payload[team].match[0]] = action.payload[team].match[1];
-        
-        for (let key in action.payload[team].stat) {
-          state.groups[action.payload[team].groupName][`team-${action.payload[team].id}`].stat[key] += action.payload[team].stat[key];
-        }
+
+      for (let team in action.payload.teamSide) {
+        state
+          .groups[action.payload.groupName][`team-${action.payload.teamSide[team].id}`]
+          .lastMatches[`match-${action.payload.tourName.slice(-1)}`] = action.payload.teamSide[team].status;
+
+          for (let data in action.payload.teamSide[team].stat) {
+            state
+              .groups[action.payload.groupName][`team-${action.payload.teamSide[team].id}`]
+              .stat[data] += action.payload.teamSide[team].stat[data];
+          }
       }
 
-      for (let team in state.groups[action.payload[0].groupName]) {
-        const groupTeam = state.groups[action.payload[0].groupName][team];
+      for (let team in state.groups[action.payload.groupName]) {
+        const groupTeam = state.groups[action.payload.groupName][team];
 
         let points = groupTeam.stat.points;
         let diff = (groupTeam.stat.scored - groupTeam.stat.missed) / 10;
@@ -78,17 +91,12 @@ export const tournamentReducer = (state = initialState, action) => {
       }
 
       sortGroup.sort((a, b) => b.sortPoints - a.sortPoints);
-      state.groups[action.payload[0].groupName] = {};
-      sortGroup.forEach((team) => state.groups[action.payload[0].groupName][team.team] = team.groupTeam);
+      state.groups[action.payload.groupName] = {};
+      sortGroup.forEach((team) => state.groups[action.payload.groupName][team.team] = team.groupTeam);
 
-      return {
-        ...state,
-      };
+      return {...state};
     case UPDATE_MATCHES:
-      // for (let team = 0; team < action.payload.length; team++) {
-      //   state.qualification.groupStage.data[action.payload[team].tour[0]][action.payload[team].tour[1]][team].scored = action.payload[team].stat.scored;
-      //   state.qualification.groupStage.data[action.payload[team].tour[0]][action.payload[team].tour[1]][team].missed = action.payload[team].stat.missed;
-      // }
+      state.qualification[action.payload.stage].matches[action.payload.tourName][action.payload.matchId] = action.payload;
 
       return {...state};
     default:

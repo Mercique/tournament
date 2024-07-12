@@ -1,12 +1,5 @@
-import {
-  addGroups,
-  addMatches,
-  addTeams,
-} from "../../store/tournament/actions";
-import {
-  selectGroupNames,
-  selectTournament,
-} from "../../store/tournament/selectors";
+import { addGroups, addMatches, addSettings, addTeams } from "../../store/tournament/actions";
+import { selectGroupNames, selectTournament } from "../../store/tournament/selectors";
 import { getRandomInt, shuffle } from "../../utils/functions";
 import style from "./Tournament.module.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,29 +11,37 @@ export const Tournament = () => {
   const tournament = useSelector(selectTournament);
   const groupNames = useSelector(selectGroupNames);
 
-  const handleGetMatches = (group) => {
+  const handleGetMatches = (group, stage, range) => {
     const groupTeams = Object.keys(group);
     const numRounds = groupTeams.length - 1;
 
-    for (let round = 0; round < numRounds; round++) {
+    for (let round = 0; round < numRounds * range; round++) {
       for (let i = 0; i < groupTeams.length / 2; i++) {
-        let match = {};
-        const homeTeam = {...group[groupTeams[i]], scored: "", missed: ""};
-        const visitTeam = {...group[groupTeams[groupTeams.length - 1 - i]], scored: "", missed: ""};
+        const matchTour = {
+          teamSide: {
+            home: {},
+            visit: {},
+          },
+          tourName: `Tour-${round + 1}`,
+          groupName: group[groupTeams[i]].groupName,
+          stage,
+        };
 
-        delete homeTeam.stat;
-        delete visitTeam.stat;
+        let count = getRandomInt(2);
+        for (let side in matchTour.teamSide) {
+          matchTour.teamSide[side] = {
+            id: count ? group[groupTeams[i]].id : group[groupTeams[groupTeams.length - 1 - i]].id,
+            name: count ? group[groupTeams[i]].name : group[groupTeams[groupTeams.length - 1 - i]].name,
+            stat: {
+              scored: "",
+              missed: "",
+            },
+          };
 
-        homeTeam.lastMatches[`match-${round + 1}`] = 0;
-        visitTeam.lastMatches[`match-${round + 1}`] = 0;
-
-        if (getRandomInt(2)) {
-          match = [homeTeam, visitTeam];
-        } else {
-          match = [visitTeam, homeTeam];
+          count = count ? 0 : 1;
         }
 
-        dispatch(addMatches({ tour: `Tour-${round + 1}`, match }));
+        dispatch(addMatches(matchTour));
       }
 
       groupTeams.splice(1, 0, groupTeams.pop());
@@ -48,8 +49,12 @@ export const Tournament = () => {
   };
 
   const handleGetTournament = () => {
+    const settings = {
+      teamsInGroup: 4,
+      rangeCircle: 1,
+    };
+
     let groupStage = {};
-    const teamsInGroup = 4;
     let teams = [
       "Россия",
       "Аргентина",
@@ -59,22 +64,22 @@ export const Tournament = () => {
       "Италия",
       "Франция",
       "Португалия",
+      "Бельгия",
+      "Нидерланды",
+      "Уругвай",
+      "Бразилия",
     ];
-    let id = 1;
 
     shuffle(teams);
     dispatch(addTeams(teams));
+    dispatch(addSettings(settings));
 
-    for (let group = 0; group < teams.length / teamsInGroup; group++) {
+    for (let group = 0; group < teams.length / settings.teamsInGroup; group++) {
       groupStage[groupNames[group]] = {};
 
-      for (
-        let team = group * teamsInGroup;
-        team < group * teamsInGroup + teamsInGroup;
-        team++
-      ) {
-        groupStage[groupNames[group]][`team-${id}`] = {
-          id,
+      for (let team = group * settings.teamsInGroup; team < group * settings.teamsInGroup + settings.teamsInGroup; team++) {
+        groupStage[groupNames[group]][`team-${team + 1}`] = {
+          id: team + 1,
           name: teams[team],
           groupName: groupNames[group],
           stat: {
@@ -90,10 +95,12 @@ export const Tournament = () => {
           lastMatches: {},
         };
 
-        id++;
+        for (let last = 0; last < (settings.teamsInGroup - 1) * settings.rangeCircle; last++) {
+          groupStage[groupNames[group]][`team-${team + 1}`].lastMatches[[`match-${last + 1}`]] = "";
+        }
       }
 
-      handleGetMatches(groupStage[groupNames[group]]);
+      handleGetMatches(groupStage[groupNames[group]], "groupStage", settings.rangeCircle);
     }
 
     dispatch(addGroups(groupStage));
