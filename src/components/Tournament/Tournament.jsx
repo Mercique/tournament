@@ -1,15 +1,20 @@
-import { addGroups, addMatches, addSettings, addTeams } from "../../store/tournament/actions";
+import { addGroups, addMatches, addPlayOff, addSettings, addTeams } from "../../store/tournament/actions";
 import { selectGroupNames, selectTournament } from "../../store/tournament/selectors";
 import { getRandomInt, shuffle } from "../../utils/functions";
 import style from "./Tournament.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Table } from "../Table/Table";
 import { Qualification } from "../Qualification/Qualification";
+import { PlayOff } from "../PlayOff/PlayOff";
+import { useState } from "react";
 
 export const Tournament = () => {
   const dispatch = useDispatch();
   const tournament = useSelector(selectTournament);
   const groupNames = useSelector(selectGroupNames);
+
+  const [openTable, setOpenTable] = useState(true);
+  const [openPlayOff, setOpenPlayOff] = useState(false);
 
   const handleGetMatches = (group, stage, range) => {
     const groupTeams = Object.keys(group);
@@ -52,23 +57,15 @@ export const Tournament = () => {
     const settings = {
       teamsInGroup: 4,
       rangeCircle: 1,
+      teamsCount: 16,
     };
 
     let groupStage = {};
-    let teams = [
-      "Россия",
-      "Аргентина",
-      "Германия",
-      "Испания",
-      "Англия",
-      "Италия",
-      "Франция",
-      "Португалия",
-      "Бельгия",
-      "Нидерланды",
-      "Уругвай",
-      "Бразилия",
-    ];
+    let teams = [];
+
+    for (let team = 0; team < settings.teamsCount; team++) {
+      teams.push(`Команда-${team + 1}`);
+    }
 
     shuffle(teams);
     dispatch(addTeams(teams));
@@ -104,28 +101,42 @@ export const Tournament = () => {
     }
 
     dispatch(addGroups(groupStage));
+    dispatch(addPlayOff(teams.length / settings.teamsInGroup));
+  };
+
+  const handleOpenComponent = (id) => {
+    switch (id) {
+      case "openTable": {
+        setOpenPlayOff(false);
+        setOpenTable(true);
+        break;
+      }
+      case "openPlayOff": {
+        setOpenTable(false);
+        setOpenPlayOff(true);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   };
 
   return (
     <div className={style.tournament}>
-      <button
-        type="button"
-        style={{ color: "black" }}
-        onClick={handleGetTournament}
-      >
-        data
-      </button>
-      <button
-        type="button"
-        style={{ color: "black" }}
-        onClick={() => console.log(tournament)}
-      >
-        tournament
-      </button>
+      <button type="button" onClick={handleGetTournament}>create</button>
+      <button type="button" onClick={() => console.log(tournament)}>log</button>
+      <button type="button" id="openTable" onClick={(e) => handleOpenComponent(e.target.id)}>Table</button>
+      <button type="button" id="openPlayOff" onClick={(e) => handleOpenComponent(e.target.id)}>PlayOff</button>
       {!Object.values(tournament.groups).length || (
-        <div className={style.tournamentStage}>
-          <Table />
-          <Qualification />
+        <div>
+          <div style={{ display: openTable ?  "flex" : "none" }} className={style.tournamentStage}>
+            <Table />
+            <Qualification />
+          </div>
+          <div style={{ display: openPlayOff ? "block" : "none" }}>
+            <PlayOff />
+          </div>
         </div>
       )}
     </div>

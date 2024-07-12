@@ -1,0 +1,10 @@
+.stage, .stageBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stageName {
+  padding-bottom: 10px;
+  padding-left: 10px;
+}

@@ -3,6 +3,10 @@
   padding-bottom: 20px;
 }
 
+.tournament > button {
+  color: #000;
+}
+
 .tournamentStage {
   display: flex;
   gap: 50px;

@@ -1,0 +1,21 @@
+.playOffMatch {
+  border-radius: 5px;
+  border: 1px solid #343436;
+}
+
+.playOffMatchTeam {
+  display: flex;
+  align-items: center;
+}
+
+.playOffMatchTeamName {
+  width: 180px;
+  padding: 10px;
+}
+
+.playOffMatchTeam input{
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  background-color: #2f2f32;
+}

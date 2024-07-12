@@ -4,17 +4,31 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectSettings } from "../../store/tournament/selectors";
 
-export const Group = ({ group }) => {
+export const Group = ({ group, groupId }) => {
   const settings = useSelector(selectSettings);
 
   useEffect(() => {
-    const groupGames = Object.values(group).reduce((acc, cur) => acc + cur.stat.games, 0);
+    const groupTeams = Object.values(group);
+    const groupGames = groupTeams.reduce((acc, cur) => acc + cur.stat.games, 0);
     const length = settings.teamsInGroup - 1;
 
     if (groupGames === settings.teamsInGroup * settings.rangeCircle * length) {
-      console.log(true);
-      // тут написать функцию создания сетки плей-офф
+      const bestTeams = [];
+
+      for (let place = 0; place < 2; place++) {
+        const team = {
+          stage: `1/${settings.teamsCount / 4} stage`,
+          id: groupTeams[place].id,
+          name: groupTeams[place].name,
+          groupId,
+        }
+
+        bestTeams.push(team);
+      }
+
+      console.log(bestTeams);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [group, settings.rangeCircle, settings.teamsInGroup]);
 
   return (

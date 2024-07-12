@@ -1,0 +1,13 @@
+.playOff {
+  height: 100%;
+  margin-top: 20px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: #18181a;
+}
+
+.playOffGrid {
+  display: flex;
+  gap: 77px;
+  padding-top: 15px;
+}

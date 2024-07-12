@@ -1,4 +1,4 @@
-import { ADD_GROUPS, ADD_MATCHES, ADD_SETTINGS, ADD_TEAMS, UPDATE_GROUPS, UPDATE_MATCHES } from "./actions";
+import { ADD_GROUPS, ADD_MATCHES, ADD_PLAYOFF, ADD_SETTINGS, ADD_TEAMS, UPDATE_GROUPS, UPDATE_MATCHES } from "./actions";
 
 const initialState = {
   settings: {
@@ -40,6 +40,35 @@ export const tournamentReducer = (state = initialState, action) => {
         ...state,
         groups: action.payload,
       };
+    case ADD_PLAYOFF:
+      for (let playOffStage = action.payload; playOffStage > 1; playOffStage /= 2) {
+        state.qualification.playOff.matches[`1/${playOffStage} stage`] = [];
+
+        for (let matchInStage = 0; matchInStage < playOffStage; matchInStage++) {
+          const match = {
+            home: {
+              name: "###",
+              scored: "",
+            },
+            visit: {
+              name: "###",
+              scored: "",
+            },
+          };
+
+          if (playOffStage === 2 && matchInStage === 0) {
+            state.qualification.playOff.matches[`3rd place`] = [];
+            state.qualification.playOff.matches[`final`] = [];
+
+            state.qualification.playOff.matches[`3rd place`][matchInStage] = match;
+            state.qualification.playOff.matches[`final`][matchInStage] = match;
+          }
+
+          state.qualification.playOff.matches[`1/${playOffStage} stage`][matchInStage] = match;
+        }
+      }
+
+      return {...state};
     case ADD_MATCHES:
       if (!state.qualification[action.payload.stage].matches[action.payload.tourName]) {
         state.qualification[action.payload.stage].matches[action.payload.tourName] = [];

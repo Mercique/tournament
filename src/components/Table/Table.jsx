@@ -12,7 +12,7 @@ export const Table = () => {
       {Object.keys(groups).map((name, idx) => (
         <div key={idx}>
           <h4 className={style.groupTitle}>Группа {name}</h4>
-          <Group group={groups[name]} key={idx} />
+          <Group group={groups[name]} groupId={idx} key={idx} />
         </div>
       ))}
     </div>

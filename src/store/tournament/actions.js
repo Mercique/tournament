@@ -2,6 +2,7 @@ export const ADD_SETTINGS = "SETTINGS::ADD_SETTINGS";
 export const ADD_TEAMS = "TEAMS::ADD_TEAMS";
 export const ADD_GROUPS = "GROUPS::ADD_GROUPS";
 export const ADD_MATCHES = "MATCHES::ADD_MATCHES";
+export const ADD_PLAYOFF = "PLAYOFF::ADD_PLAYOFF";
 export const UPDATE_GROUPS = "GROUPS::UPDATE_GROUPS";
 export const UPDATE_MATCHES = "MATCHES::UPDATE_MATCHES";
 
@@ -23,6 +24,11 @@ export const addGroups = (groups) => ({
 export const addMatches = (match) => ({
   type: ADD_MATCHES,
   payload: match,
+});
+
+export const addPlayOff = (teams) => ({
+  type: ADD_PLAYOFF,
+  payload: teams,
 });
 
 export const updateGroups = (stat) => ({
