@@ -15,7 +15,12 @@
 
 .playOffMatchTeam input{
   width: 30px;
-  height: 30px;
+  height: 41px;
   text-align: center;
   background-color: #2f2f32;
+}
+
+.playOffMatchTeam input:disabled {
+  cursor: not-allowed;
+  opacity: .5;
 }

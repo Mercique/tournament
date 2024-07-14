@@ -57,7 +57,7 @@ export const Tournament = () => {
     const settings = {
       teamsInGroup: 4,
       rangeCircle: 1,
-      teamsCount: 16,
+      teamsCount: 32,
     };
 
     let groupStage = {};

@@ -1,10 +1,12 @@
 import style from "./Group.module.css";
 import { LastMatches } from "../LastMatches/LastMatches";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectSettings } from "../../store/tournament/selectors";
+import { updatePlayOff } from "../../store/tournament/actions";
 
 export const Group = ({ group, groupId }) => {
+  const dispatch = useDispatch();
   const settings = useSelector(selectSettings);
 
   useEffect(() => {
@@ -13,20 +15,28 @@ export const Group = ({ group, groupId }) => {
     const length = settings.teamsInGroup - 1;
 
     if (groupGames === settings.teamsInGroup * settings.rangeCircle * length) {
-      const bestTeams = [];
+      const bestTeams = {
+        groupId,
+        stage: settings.teamsCount / 4,
+        from: "groupStage",
+        teams: {
+          firstPlace: {},
+          secondPlace: {},
+        },
+      };
 
-      for (let place = 0; place < 2; place++) {
-        const team = {
-          stage: `1/${settings.teamsCount / 4} stage`,
-          id: groupTeams[place].id,
-          name: groupTeams[place].name,
-          groupId,
+      let placeCount = 0;
+      for (let place in bestTeams.teams) {
+        bestTeams.teams[place] = {
+          id: groupTeams[placeCount].id,
+          name: groupTeams[placeCount].name,
+          scored: "",
         }
 
-        bestTeams.push(team);
+        placeCount++;
       }
 
-      console.log(bestTeams);
+      dispatch(updatePlayOff(bestTeams));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [group, settings.rangeCircle, settings.teamsInGroup]);

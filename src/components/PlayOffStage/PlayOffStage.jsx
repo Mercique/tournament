@@ -9,7 +9,7 @@ export const PlayOffStage = ({ stageName, stage, stageId }) => {
       <h4 className={style.stageName}>{stageName}</h4>
       <div className={style.stageBox} style={{ gap: gapStyle[stageId] }}>
         {Object.values(stage).map((match, idx) => (
-          <PlayOffMatch match={match} key={idx} />
+          <PlayOffMatch match={match} matchId={idx} key={idx} />
         ))}
       </div>
     </div>
