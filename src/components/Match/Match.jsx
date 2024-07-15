@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import style from "./Match.module.css";
 import { updateGroups, updateMatches } from "../../store/tournament/actions";
 import { useDispatch } from "react-redux";
-import { getRandomInt } from "../../utils/functions";
+import { RandomButton } from "../RandomButton/RandomButton";
 
 export const Match = ({ match, matchId }) => {
   const dispatch = useDispatch();
-  const [homeScore, setHomeScore] = useState(match.teamSide.home.stat.scored);
-  const [visitScore, setVisitScore] = useState(match.teamSide.visit.stat.scored);
+  const [homeScore, setHomeScore] = useState(1);
+  const [visitScore, setVisitScore] = useState(2);
+  const [openButton, setOpenButton] = useState(true);
 
   const handleSetStat = (status) => {
     const matchInfo = {
@@ -74,6 +75,8 @@ export const Match = ({ match, matchId }) => {
 
   useEffect(() => {
     if (homeScore !== "" && visitScore !== "") {
+      setOpenButton(false);
+
       switch (match.stage) {
         case "groupStage": {
           if (homeScore > visitScore) {
@@ -96,11 +99,6 @@ export const Match = ({ match, matchId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [homeScore, visitScore]);
 
-  const handleScore = () => {
-    setHomeScore(getRandomInt(4));
-    setVisitScore(getRandomInt(4));
-  };
-
   return (
     <div className={style.tour}>
       <div className={style.match}>
@@ -111,6 +109,7 @@ export const Match = ({ match, matchId }) => {
             id={match.teamSide.home.id}
             value={homeScore}
             onChange={(e) => setHomeScore(+e.target.value)}
+            disabled={!openButton}
           />
           <b>:</b>
           <input
@@ -118,16 +117,11 @@ export const Match = ({ match, matchId }) => {
             id={match.teamSide.visit.id}
             value={visitScore}
             onChange={(e) => setVisitScore(+e.target.value)}
+            disabled={!openButton}
           />
         </div>
         <span className={style.teamVisit}>{match.teamSide.visit.name}</span>
-        <button
-          type="button"
-          style={{ position: "absolute", right: "0", color: "#000" }}
-          onClick={handleScore}
-        >
-          random
-        </button>
+        { openButton && <RandomButton setHomeScore={setHomeScore} setVisitScore={setVisitScore} /> }
       </div>
     </div>
   );

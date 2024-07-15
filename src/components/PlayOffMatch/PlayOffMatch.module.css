@@ -1,6 +1,73 @@
-.playOffMatch {
+.playOffMatch, .playOffFinal, .playOffThree {
+  position: relative;
   border-radius: 5px;
   border: 1px solid #343436;
+}
+
+.playOffFinal:nth-child(2n - 1):before {
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: -78px;
+  width: 77px;
+  height: 1px;
+  background-color: #343436;
+}
+
+.playOffMatch:nth-child(2n - 1)::before, .playOffMatch:nth-child(2n - 1)::after {
+  content: "";
+  position: absolute;
+  border-radius: 0 5px 5px 0;
+}
+
+.playOffMatch:nth-child(2n - 1)::before {
+  width: 40px;
+  right: -41px;
+  border: 1px solid #343436;
+  border-left-color: transparent;
+}
+
+.playOffMatch:nth-child(2n - 1)::after {
+  width: 38px;
+  height: 1px;
+  right: -78px;
+  background-color: #343436;
+}
+
+.playOffMatch-1:nth-child(2n - 1)::before {
+  height: 105px;
+  bottom: -64px;
+}
+
+.playOffMatch-2:nth-child(2n - 1)::before {
+  height: 209px;
+  bottom: -168px; 
+}
+
+.playOffMatch-3:nth-child(2n - 1)::before {
+  height: 418px;
+  bottom: -376px; 
+}
+
+.playOffMatch-4:nth-child(2n - 1)::before {
+  height: 833px;
+  bottom: -792px; 
+}
+
+.playOffMatch-1:nth-child(2n - 1)::after {
+  bottom: -12px;
+}
+
+.playOffMatch-2:nth-child(2n - 1)::after {
+  bottom: -62px;
+}
+
+.playOffMatch-3:nth-child(2n - 1)::after {
+  bottom: -169px;
+}
+
+.playOffMatch-4:nth-child(2n - 1)::after {
+  bottom: -376px;
 }
 
 .playOffMatchTeam {
@@ -18,9 +85,4 @@
   height: 41px;
   text-align: center;
   background-color: #2f2f32;
-}
-
-.playOffMatchTeam input:disabled {
-  cursor: not-allowed;
-  opacity: .5;
 }

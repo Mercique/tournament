@@ -17,7 +17,7 @@ export const Group = ({ group, groupId }) => {
     if (groupGames === settings.teamsInGroup * settings.rangeCircle * length) {
       const bestTeams = {
         groupId,
-        stage: settings.teamsCount / 4,
+        stage: settings.teamsCount / settings.teamsInGroup,
         from: "groupStage",
         teams: {
           firstPlace: {},

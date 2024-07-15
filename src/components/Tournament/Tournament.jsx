@@ -57,7 +57,7 @@ export const Tournament = () => {
     const settings = {
       teamsInGroup: 4,
       rangeCircle: 1,
-      teamsCount: 32,
+      teamsCount: 64,
     };
 
     let groupStage = {};
@@ -130,11 +130,11 @@ export const Tournament = () => {
       <button type="button" id="openPlayOff" onClick={(e) => handleOpenComponent(e.target.id)}>PlayOff</button>
       {!Object.values(tournament.groups).length || (
         <div>
-          <div style={{ display: openTable ?  "flex" : "none" }} className={style.tournamentStage}>
+          <div className={style.tournamentStage} style={{ display: openTable ?  "flex" : "none" }}>
             <Table />
             <Qualification />
           </div>
-          <div style={{ display: openPlayOff ? "block" : "none" }}>
+          <div className={style.tournamentPlayOff} style={{ display: openPlayOff ? "flex" : "none" }}>
             <PlayOff />
           </div>
         </div>

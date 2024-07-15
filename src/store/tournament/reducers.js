@@ -7,7 +7,7 @@ const initialState = {
   },
   groupNames: [
     "A", "B", "C", "D", "E", "F", "G", "H",
-    "I", "G", "K", "L", "M", "N", "O", "P",
+    "I", "J", "K", "L", "M", "N", "O", "P",
   ],
   teams: [],
   groups: {},
@@ -87,8 +87,27 @@ export const tournamentReducer = (state = initialState, action) => {
           break;
         }
         case "playOff": {
-          console.log(typeof action.payload.stage);
-          if (action.payload.stage !== 1) {
+          if (action.payload.stage === 1) {
+            if (action.payload.home.scored > action.payload.visit.scored) {
+              playOffMatches["Final"][0].home = action.payload.home;
+              console.log("2 место - ", action.payload.visit.name);
+              console.log("1 место - ", action.payload.home.name);
+            } else {
+              playOffMatches["Final"][0].visit = action.payload.visit;
+              console.log("2 место - ", action.payload.home.name);
+              console.log("1 место - ", action.payload.visit.name);
+            }
+          } else if (action.payload.stage === 3) {
+            if (action.payload.home.scored > action.payload.visit.scored) {
+              playOffMatches["3nd place"][0].home = action.payload.home;
+              console.log("4 место - ", action.payload.visit.name);
+              console.log("3 место - ", action.payload.home.name);
+            } else {
+              playOffMatches["3nd place"][0].visit = action.payload.visit;
+              console.log("4 место - ", action.payload.home.name);
+              console.log("3 место - ", action.payload.visit.name);
+            }
+          } else if (action.payload.stage > 2) {
             if (action.payload.home.scored > action.payload.visit.scored) {
               if (playOffMatches[`1/${action.payload.stage / 2} stage`][Math.floor(action.payload.matchId / 2)].home.id) {
                 playOffMatches[`1/${action.payload.stage / 2} stage`][Math.floor(action.payload.matchId / 2)].visit = homeTeam;
@@ -101,26 +120,6 @@ export const tournamentReducer = (state = initialState, action) => {
               } else {
                 playOffMatches[`1/${action.payload.stage / 2} stage`][Math.floor(action.payload.matchId / 2)].home = visitTeam;
               }
-            }
-          } else if (action.payload.stage === 3) {
-            if (action.payload.home.scored > action.payload.visit.scored) {
-              playOffMatches["3nd place"][0].home = action.payload.home;
-              console.log("3 место - ", action.payload.home.name);
-              console.log("4 место - ", action.payload.visit.name);
-            } else {
-              playOffMatches["3nd place"][0].visit = action.payload.visit;
-              console.log("3 место - ", action.payload.visit.name);
-              console.log("4 место - ", action.payload.home.name);
-            }
-          } else if (action.payload.stage === 1) {
-            if (action.payload.home.scored > action.payload.visit.scored) {
-              playOffMatches["Final"][0].home = action.payload.home;
-              console.log("1 место - ", action.payload.home.name);
-              console.log("2 место - ", action.payload.visit.name);
-            } else {
-              playOffMatches["Final"][0].visit = action.payload.visit;
-              console.log("1 место - ", action.payload.visit.name);
-              console.log("2 место - ", action.payload.home.name);
             }
           } else {
             if (action.payload.home.scored > action.payload.visit.scored) {

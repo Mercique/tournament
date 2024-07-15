@@ -18,8 +18,20 @@ b {
   background-color: transparent;
 }
 
+b {
+  cursor: default;
+}
+
 input {
   all: unset;
+}
+
+input:disabled {
+  cursor: default;
+}
+
+button {
+  cursor: pointer;
 }
 
 input::-webkit-outer-spin-button,
@@ -29,8 +41,8 @@ input::-webkit-inner-spin-button {
 }
 
 .center {
-  padding-left: calc(50% - 700px);
-  padding-right: calc(50% - 700px);
+  padding-left: calc(50% - 900px);
+  padding-right: calc(50% - 900px);
 }
 
 .App {
