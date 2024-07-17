@@ -1,6 +1,6 @@
-import { addGroups, addMatches, addPlayOff, addSettings, addTeams } from "../../store/tournament/actions";
-import { selectGroupNames, selectTournament } from "../../store/tournament/selectors";
-import { getRandomInt, shuffle } from "../../utils/functions";
+import { addGroups, addMatches, addPlayOff } from "../../store/tournament/actions";
+import { selectGroupNames, selectSettings, selectTournament } from "../../store/tournament/selectors";
+import { getRandomInt } from "../../utils/functions";
 import style from "./Tournament.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Table } from "../Table/Table";
@@ -10,6 +10,7 @@ import { useState } from "react";
 
 export const Tournament = () => {
   const dispatch = useDispatch();
+  const settings = useSelector(selectSettings);
   const tournament = useSelector(selectTournament);
   const groupNames = useSelector(selectGroupNames);
 
@@ -59,22 +60,8 @@ export const Tournament = () => {
   };
 
   const handleGetTournament = () => {
-    const settings = {
-      teamsCount: 7,
-      teamsInGroup: 7,
-      rangeCircle: 1,
-    };
-
     let groupStage = {};
     let teams = [];
-
-    for (let team = 0; team < settings.teamsCount; team++) {
-      teams.push(`Команда-${team + 1}`);
-    }
-
-    shuffle(teams);
-    dispatch(addTeams(teams));
-    dispatch(addSettings(settings));
 
     for (let group = 0; group < teams.length / settings.teamsInGroup; group++) {
       groupStage[groupNames[group]] = {};
@@ -125,9 +112,11 @@ export const Tournament = () => {
             <Table />
             <Qualification />
           </div>
-          <div className={style.tournamentPlayOff} style={{ display: !openStage ? "flex" : "none" }}>
-            <PlayOff />
-          </div>
+          {!Object.values(tournament.qualification.playOff).length || (
+            <div className={style.tournamentPlayOff} style={{ display: !openStage ? "flex" : "none" }}>
+              <PlayOff />
+            </div>
+          )}
         </div>
       )}
     </div>

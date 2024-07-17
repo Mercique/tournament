@@ -1,3 +1,14 @@
+// Добавляет рандомные команды
+export const addRandomTeams = (count) => {
+  let teams = [];
+
+  for (let team = 0; team < count; team++) {
+    teams.push(`Команда-${team + 1}`);
+  }
+
+  return teams;
+};
+
 // Перемешивает массив
 export const shuffle = (array) => {
   let currentIndex = array.length;
@@ -11,8 +22,11 @@ export const shuffle = (array) => {
       array[currentIndex],
     ];
   }
+
+  return array;
 };
 
+// Возвращает рандомное число от 0 до max
 export const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
 };

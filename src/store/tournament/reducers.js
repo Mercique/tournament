@@ -2,9 +2,9 @@ import { ADD_GROUPS, ADD_MATCHES, ADD_PLAYOFF, ADD_SETTINGS, ADD_TEAMS, UPDATE_G
 
 const initialState = {
   settings: {
-    teamsInGroup: 4,
+    teamsInGroup: 3,
     rangeCircle: 1,
-    teamsCount: 4,
+    teamsCount: 3,
   },
   groupNames: [
     "A", "B", "C", "D", "E", "F", "G", "H",
@@ -12,21 +12,50 @@ const initialState = {
   ],
   teams: [],
   groups: {},
-  qualification: {
-    groupStage: {
-      name: "Групповая стадия",
-      matches: {},
-    },
-    playOff: {
-      name: "Плей-офф",
-      matches: {},
-    },
-  },
+  qualification: {},
 };
 
 export const tournamentReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_SETTINGS:
+      console.log(action.payload);
+      switch (action.payload.tournamentSystem) {
+        case "League": {
+          state.qualification = {
+            groupStage: {
+              name: "Групповая стадия",
+              matches: {},
+            },
+          };
+          break;
+        }
+        case "GroupAndPlayOff": {
+          state.qualification = {
+            groupStage: {
+              name: "Групповая стадия",
+              matches: {},
+            },
+            playOff: {
+              name: "Плей-офф",
+              matches: {},
+            },
+          };
+          break;
+        }
+        case "PlayOff": {
+          state.qualification = {
+            playOff: {
+              name: "Плей-офф",
+              matches: {},
+            },
+          };
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+
       return {
         ...state,
         settings: action.payload,

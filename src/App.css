@@ -22,10 +22,6 @@ b {
   cursor: default;
 }
 
-input {
-  all: unset;
-}
-
 input:disabled {
   cursor: default;
 }
@@ -41,6 +37,8 @@ input::-webkit-inner-spin-button {
 }
 
 .center {
+  padding-top: 30px;
+  padding-bottom: 30px;
   padding-left: calc(50% - 900px);
   padding-right: calc(50% - 900px);
 }
@@ -56,6 +54,9 @@ input::-webkit-inner-spin-button {
 }
 
 .App__wrapper-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   flex-grow: 1;
   position: relative;
 }
