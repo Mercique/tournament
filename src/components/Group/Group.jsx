@@ -26,6 +26,7 @@ export const Group = ({ group, groupId }) => {
       };
 
       let placeCount = 0;
+      
       for (let place in bestTeams.teams) {
         bestTeams.teams[place] = {
           id: groupTeams[placeCount].id,
@@ -36,7 +37,9 @@ export const Group = ({ group, groupId }) => {
         placeCount++;
       }
 
-      dispatch(updatePlayOff(bestTeams));
+      if (settings.teamsInGroup !== settings.teamsCount) {
+        dispatch(updatePlayOff(bestTeams));
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [group, settings.rangeCircle, settings.teamsInGroup]);
@@ -69,7 +72,7 @@ export const Group = ({ group, groupId }) => {
           </div>
           <span className={style.groupTeamPoints}>{group[team].stat.points}</span>
           <div className={style.groupTeamLastGames}>
-            {Object.values(group[team].lastMatches).map((status, idx) => (
+            {group[team].lastMatches.map((status, idx) => (
               <LastMatches status={status} key={idx} />
             ))}
           </div>

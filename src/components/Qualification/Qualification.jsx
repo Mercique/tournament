@@ -11,7 +11,7 @@ export const Qualification = () => {
       <h2 className={style.qualificationTitle}>{groupStage.name}</h2>
       {Object.keys(groupStage.matches).map((tourName, idx) => (
         <div className={style.qualificationStage} key={idx}>
-          <Tour tourName={tourName} tourMatches={groupStage.matches[tourName]} />
+          <Tour tourId={idx} tourMatches={groupStage.matches[tourName]} />
         </div>
       ))}
     </div>

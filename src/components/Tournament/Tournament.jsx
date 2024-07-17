@@ -13,51 +13,52 @@ export const Tournament = () => {
   const tournament = useSelector(selectTournament);
   const groupNames = useSelector(selectGroupNames);
 
-  const [openTable, setOpenTable] = useState(true);
-  const [openPlayOff, setOpenPlayOff] = useState(false);
+  const [openStage, setOpenStage] = useState(true);
 
   const handleGetMatches = (group, stage, range) => {
     const groupTeams = Object.keys(group);
     const numRounds = groupTeams.length - 1;
 
-    for (let round = 0; round < numRounds * range; round++) {
-      for (let i = 0; i < groupTeams.length / 2; i++) {
-        const matchTour = {
-          teamSide: {
-            home: {},
-            visit: {},
-          },
-          tourName: `Tour-${round + 1}`,
-          groupName: group[groupTeams[i]].groupName,
-          stage,
-        };
-
-        let count = getRandomInt(2);
-        for (let side in matchTour.teamSide) {
-          matchTour.teamSide[side] = {
-            id: count ? group[groupTeams[i]].id : group[groupTeams[groupTeams.length - 1 - i]].id,
-            name: count ? group[groupTeams[i]].name : group[groupTeams[groupTeams.length - 1 - i]].name,
-            stat: {
-              scored: "",
-              missed: "",
+    for (let countRange = 0; countRange < range; countRange++) {
+      for (let round = numRounds * countRange; round < numRounds * countRange + numRounds; round++) {
+        for (let i = 0; i < groupTeams.length / 2; i++) {
+          const matchTour = {
+            teamSide: {
+              home: {},
+              visit: {},
             },
+            tourName: `Tour-${round + 1}`,
+            groupName: group[groupTeams[i]].groupName,
+            stage,
           };
 
-          count = count ? 0 : 1;
+          let count = getRandomInt(2);
+          for (let side in matchTour.teamSide) {
+            matchTour.teamSide[side] = {
+              id: count ? group[groupTeams[i]].id : group[groupTeams[groupTeams.length - 1 - i]].id,
+              name: count ? group[groupTeams[i]].name : group[groupTeams[groupTeams.length - 1 - i]].name,
+              stat: {
+                scored: "",
+                missed: "",
+              },
+            };
+
+            count = count ? 0 : 1;
+          }
+
+          dispatch(addMatches(matchTour));
         }
 
-        dispatch(addMatches(matchTour));
+        groupTeams.splice(1, 0, groupTeams.pop());
       }
-
-      groupTeams.splice(1, 0, groupTeams.pop());
     }
   };
 
   const handleGetTournament = () => {
     const settings = {
+      teamsCount: 16,
       teamsInGroup: 4,
-      rangeCircle: 1,
-      teamsCount: 64,
+      rangeCircle: 2,
     };
 
     let groupStage = {};
@@ -88,12 +89,13 @@ export const Tournament = () => {
             missed: 0,
             points: 0,
             homeLoss: 0,
+            homeDraw: 0,
           },
-          lastMatches: {},
+          lastMatches: [],
         };
 
-        for (let last = 0; last < (settings.teamsInGroup - 1) * settings.rangeCircle; last++) {
-          groupStage[groupNames[group]][`team-${team + 1}`].lastMatches[[`match-${last + 1}`]] = "";
+        for (let last = 0; last < (settings.teamsInGroup < 5 ? 3 : 5); last++) {
+          groupStage[groupNames[group]][`team-${team + 1}`].lastMatches[last] = "empty";
         }
       }
 
@@ -101,24 +103,9 @@ export const Tournament = () => {
     }
 
     dispatch(addGroups(groupStage));
-    dispatch(addPlayOff(teams.length / settings.teamsInGroup));
-  };
 
-  const handleOpenComponent = (id) => {
-    switch (id) {
-      case "openTable": {
-        setOpenPlayOff(false);
-        setOpenTable(true);
-        break;
-      }
-      case "openPlayOff": {
-        setOpenTable(false);
-        setOpenPlayOff(true);
-        break;
-      }
-      default: {
-        break;
-      }
+    if (settings.teamsInGroup !== settings.teamsCount) {
+      dispatch(addPlayOff(teams.length / settings.teamsInGroup));
     }
   };
 
@@ -126,15 +113,15 @@ export const Tournament = () => {
     <div className={style.tournament}>
       <button type="button" onClick={handleGetTournament}>create</button>
       <button type="button" onClick={() => console.log(tournament)}>log</button>
-      <button type="button" id="openTable" onClick={(e) => handleOpenComponent(e.target.id)}>Table</button>
-      <button type="button" id="openPlayOff" onClick={(e) => handleOpenComponent(e.target.id)}>PlayOff</button>
+      <button type="button" id="openTable" onClick={() => setOpenStage(true)}>Table</button>
+      <button type="button" id="openPlayOff" onClick={() => setOpenStage(false)}>PlayOff</button>
       {!Object.values(tournament.groups).length || (
         <div>
-          <div className={style.tournamentStage} style={{ display: openTable ?  "flex" : "none" }}>
+          <div className={style.tournamentStage} style={{ display: openStage ?  "flex" : "none" }}>
             <Table />
             <Qualification />
           </div>
-          <div className={style.tournamentPlayOff} style={{ display: openPlayOff ? "flex" : "none" }}>
+          <div className={style.tournamentPlayOff} style={{ display: !openStage ? "flex" : "none" }}>
             <PlayOff />
           </div>
         </div>

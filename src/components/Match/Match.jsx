@@ -6,8 +6,8 @@ import { RandomButton } from "../RandomButton/RandomButton";
 
 export const Match = ({ match, matchId }) => {
   const dispatch = useDispatch();
-  const [homeScore, setHomeScore] = useState(1);
-  const [visitScore, setVisitScore] = useState(2);
+  const [homeScore, setHomeScore] = useState(match.teamSide.home.stat.scored);
+  const [visitScore, setVisitScore] = useState(match.teamSide.visit.stat.scored);
   const [openButton, setOpenButton] = useState(true);
 
   const handleSetStat = (status) => {
@@ -48,6 +48,7 @@ export const Match = ({ match, matchId }) => {
         matchInfo.teamSide.home.stat.draws = 1;
         matchInfo.teamSide.home.stat.points = 1;
         matchInfo.teamSide.home.status = "draw";
+        matchInfo.teamSide.home.stat.homeDraw = 1;
 
         matchInfo.teamSide.visit.stat.draws = 1;
         matchInfo.teamSide.visit.stat.points = 1;

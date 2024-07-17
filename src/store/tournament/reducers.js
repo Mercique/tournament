@@ -4,6 +4,7 @@ const initialState = {
   settings: {
     teamsInGroup: 4,
     rangeCircle: 1,
+    teamsCount: 4,
   },
   groupNames: [
     "A", "B", "C", "D", "E", "F", "G", "H",
@@ -186,9 +187,17 @@ export const tournamentReducer = (state = initialState, action) => {
       let sortGroup = [];
 
       for (let team in action.payload.teamSide) {
-        state
-          .groups[action.payload.groupName][`team-${action.payload.teamSide[team].id}`]
-          .lastMatches[`match-${action.payload.tourName.slice(-1)}`] = action.payload.teamSide[team].status;
+        const teamCountGames = state.groups[action.payload.groupName][`team-${action.payload.teamSide[team].id}`].stat.games;
+
+        if (!state.groups[action.payload.groupName][`team-${action.payload.teamSide[team].id}`].lastMatches[teamCountGames]) {
+          state.groups[action.payload.groupName][`team-${action.payload.teamSide[team].id}`].lastMatches.shift();
+          state.groups[action.payload.groupName][`team-${action.payload.teamSide[team].id}`].lastMatches.push(action.payload.teamSide[team].status);
+        } else {
+          state
+            .groups[action.payload.groupName][`team-${action.payload.teamSide[team].id}`]
+            .lastMatches[teamCountGames] = action.payload.teamSide[team].status;
+        }
+
 
           for (let data in action.payload.teamSide[team].stat) {
             state
@@ -205,8 +214,9 @@ export const tournamentReducer = (state = initialState, action) => {
         let scored = groupTeam.stat.scored / 100;
         let games = groupTeam.stat.games / 1000;
         let checkHomeLossGame = groupTeam.stat.homeLoss * (-0.0001);
+        let checkHomeDrawGame = groupTeam.stat.homeDraw * (-0.0001);
 
-        let sortPoints = (points + diff + scored + games + checkHomeLossGame).toFixed(5);
+        let sortPoints = (points + diff + scored + games + checkHomeLossGame + checkHomeDrawGame).toFixed(5);
 
         sortGroup.push({team, groupTeam, sortPoints});
       }

@@ -11,7 +11,7 @@ export const Table = () => {
       <h2 className={style.tableTitle}>Турнирная таблица</h2>
       {Object.keys(groups).map((name, idx) => (
         <div key={idx}>
-          <h4 className={style.groupTitle}>Группа {name}</h4>
+          <h4 className={style.groupTitle}>{Object.keys(groups).length - 1 ? `Группа ${name}` : `Лига`}</h4>
           <Group group={groups[name]} groupId={idx} key={idx} />
         </div>
       ))}
