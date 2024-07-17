@@ -17,11 +17,15 @@ export const Tournament = () => {
 
   const handleGetMatches = (group, stage, range) => {
     const groupTeams = Object.keys(group);
-    const numRounds = groupTeams.length - 1;
+    const numRounds = groupTeams.length % 2 === 0 ? groupTeams.length - 1 : groupTeams.length;
 
     for (let countRange = 0; countRange < range; countRange++) {
       for (let round = numRounds * countRange; round < numRounds * countRange + numRounds; round++) {
         for (let i = 0; i < groupTeams.length / 2; i++) {
+          if (group[groupTeams[i]].id === group[groupTeams[groupTeams.length - 1 - i]].id) {
+            break;
+          }
+
           const matchTour = {
             teamSide: {
               home: {},
@@ -49,16 +53,16 @@ export const Tournament = () => {
           dispatch(addMatches(matchTour));
         }
 
-        groupTeams.splice(1, 0, groupTeams.pop());
+        groupTeams.splice(0, 0, groupTeams.pop());
       }
     }
   };
 
   const handleGetTournament = () => {
     const settings = {
-      teamsCount: 16,
-      teamsInGroup: 4,
-      rangeCircle: 2,
+      teamsCount: 7,
+      teamsInGroup: 7,
+      rangeCircle: 1,
     };
 
     let groupStage = {};
@@ -94,7 +98,7 @@ export const Tournament = () => {
           lastMatches: [],
         };
 
-        for (let last = 0; last < (settings.teamsInGroup < 5 ? 3 : 5); last++) {
+        for (let last = 0; last < (settings.teamsInGroup <= 5 ? settings.teamsInGroup - 1 : 5); last++) {
           groupStage[groupNames[group]][`team-${team + 1}`].lastMatches[last] = "empty";
         }
       }
