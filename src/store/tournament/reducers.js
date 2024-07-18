@@ -1,11 +1,7 @@
-import { ADD_GROUPS, ADD_MATCHES, ADD_PLAYOFF, ADD_SETTINGS, ADD_TEAMS, UPDATE_GROUPS, UPDATE_MATCHES, UPDATE_PLAYOFF } from "./actions";
+import { ADD_GROUPS, ADD_MATCHES, ADD_PLAYOFF, ADD_SETTINGS, ADD_TEAMS, MIX_TEAMS, UPDATE_GROUPS, UPDATE_MATCHES, UPDATE_PLAYOFF } from "./actions";
 
 const initialState = {
-  settings: {
-    teamsInGroup: 3,
-    rangeCircle: 1,
-    teamsCount: 3,
-  },
+  settings: {},
   groupNames: [
     "A", "B", "C", "D", "E", "F", "G", "H",
     "I", "J", "K", "L", "M", "N", "O", "P",
@@ -18,7 +14,6 @@ const initialState = {
 export const tournamentReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_SETTINGS:
-      console.log(action.payload);
       switch (action.payload.tournamentSystem) {
         case "League": {
           state.qualification = {
@@ -63,6 +58,14 @@ export const tournamentReducer = (state = initialState, action) => {
     case ADD_TEAMS:
       return {
         ...state,
+        teams: [
+          ...state.teams,
+          ...action.payload,
+        ],
+      };
+    case MIX_TEAMS:
+      return {
+        ...state,
         teams: action.payload,
       };
     case ADD_GROUPS:
@@ -88,7 +91,9 @@ export const tournamentReducer = (state = initialState, action) => {
           };
 
           if (playOffStage === 2 && matchInStage === 0) {
-            state.qualification.playOff.matches[`3nd place`] = [{...match, stage: `3nd place`}];
+            if (state.settings.threePlace) {
+              state.qualification.playOff.matches[`3nd place`] = [{...match, stage: `3nd place`}];
+            }
             state.qualification.playOff.matches[`Final`] = [{...match, stage: `Final`}];
           }
 
@@ -110,8 +115,8 @@ export const tournamentReducer = (state = initialState, action) => {
               playOffMatches[`1/${action.payload.stage} stage`][action.payload.groupId].home = action.payload.teams.firstPlace;
               playOffMatches[`1/${action.payload.stage} stage`][action.payload.groupId + 1].visit = action.payload.teams.secondPlace;
             } else {
-              playOffMatches[`1/${action.payload.stage} stage`][action.payload.groupId - 1].visit = action.payload.teams.firstPlace;
-              playOffMatches[`1/${action.payload.stage} stage`][action.payload.groupId].home = action.payload.teams.secondPlace;
+              playOffMatches[`1/${action.payload.stage} stage`][action.payload.groupId].home = action.payload.teams.firstPlace;
+              playOffMatches[`1/${action.payload.stage} stage`][action.payload.groupId - 1].visit = action.payload.teams.secondPlace;
             }
           }
           break;
@@ -155,18 +160,26 @@ export const tournamentReducer = (state = initialState, action) => {
             if (action.payload.home.scored > action.payload.visit.scored) {
               if (playOffMatches["Final"][0].home.id) {
                 playOffMatches["Final"][0].visit = homeTeam;
-                playOffMatches["3nd place"][0].visit = visitTeam;
+                if (state.settings.threePlace) {
+                  playOffMatches["3nd place"][0].visit = visitTeam;
+                }
               } else {
                 playOffMatches["Final"][0].home = homeTeam;
-                playOffMatches["3nd place"][0].home = visitTeam;
+                if (state.settings.threePlace) {
+                  playOffMatches["3nd place"][0].home = visitTeam;
+                }
               }
             } else {
               if (playOffMatches["Final"][0].home.id) {
                 playOffMatches["Final"][0].visit = visitTeam;
-                playOffMatches["3nd place"][0].visit = homeTeam;
+                if (state.settings.threePlace) {
+                  playOffMatches["3nd place"][0].visit = homeTeam;
+                }
               } else {
                 playOffMatches["Final"][0].home = visitTeam;
-                playOffMatches["3nd place"][0].home = homeTeam;
+                if (state.settings.threePlace) {
+                  playOffMatches["3nd place"][0].home = homeTeam;
+                }
               }
             }
           }

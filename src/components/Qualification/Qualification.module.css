@@ -1,7 +1,7 @@
 .qualification {
   width: 500px;
-  max-height: 754px;
-  overflow-y: scroll;
+  max-height: 774px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 15px;

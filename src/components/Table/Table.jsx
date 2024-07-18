@@ -7,7 +7,7 @@ export const Table = () => {
   const groups = useSelector(selectGroups);
 
   return (
-    <div className={style.table}>
+    <div className={style.table} id="table">
       <h2 className={style.tableTitle}>Турнирная таблица</h2>
       {Object.keys(groups).map((name, idx) => (
         <div key={idx}>

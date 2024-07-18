@@ -1,5 +1,6 @@
 export const ADD_SETTINGS = "SETTINGS::ADD_SETTINGS";
 export const ADD_TEAMS = "TEAMS::ADD_TEAMS";
+export const MIX_TEAMS = "TEAMS::MIX_TEAMS";
 export const ADD_GROUPS = "GROUPS::ADD_GROUPS";
 export const ADD_MATCHES = "MATCHES::ADD_MATCHES";
 export const ADD_PLAYOFF = "PLAYOFF::ADD_PLAYOFF";
@@ -15,6 +16,11 @@ export const addSettings = (settings) => ({
 export const addTeams = (teams) => ({
   type: ADD_TEAMS,
   payload: teams,
+});
+
+export const mixTeams = (mix) => ({
+  type: MIX_TEAMS,
+  payload: mix,
 });
 
 export const addGroups = (groups) => ({
