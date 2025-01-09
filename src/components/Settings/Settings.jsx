@@ -19,6 +19,7 @@ export const Settings = ({ openTournament }) => {
   const [rangeCircle, setRangeCircle] = useState(1);
   const [threePlace, setThreePlace] = useState(false);
   const [teamName, setTeamName] = useState("");
+  const [namedNewTeam, setNamedNewTeam] = useState(0);
 
   const handleGetMatches = (group, stage, range) => {
     const groupTeams = Object.keys(group);
@@ -105,12 +106,14 @@ export const Settings = ({ openTournament }) => {
   };
 
   const handleAddTeam = () => {
+    setNamedNewTeam((prevNamedNewTeam) => prevNamedNewTeam + 1);
     dispatch(addTeams([teamName]));
     setTeamName("");
   };
 
   const handleAddRandomTeams = () => {
-    const randomTeams = addRandomTeams(teamsCount);
+    const countRandomTeams = teamsCount - namedNewTeam;
+    const randomTeams = addRandomTeams(countRandomTeams);
     dispatch(addTeams(randomTeams));
   };
 
