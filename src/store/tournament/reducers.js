@@ -1,6 +1,7 @@
-import { ADD_GROUPS, ADD_MATCHES, ADD_PLAYOFF, ADD_SETTINGS, ADD_TEAMS, MIX_TEAMS, UPDATE_GROUPS, UPDATE_MATCHES, UPDATE_PLAYOFF } from "./actions";
+import { ADD_GROUPS, ADD_MATCHES, ADD_PLAYOFF, ADD_SETTINGS, ADD_TEAMS, CLEAR_TEAMS, MIX_TEAMS, UPDATE_GROUPS, UPDATE_MATCHES, UPDATE_PLAYOFF } from "./actions";
 
 const initialState = {
+  idTournament: null,
   settings: {},
   groupNames: [
     "A", "B", "C", "D", "E", "F", "G", "H",
@@ -14,6 +15,7 @@ const initialState = {
 export const tournamentReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_SETTINGS:
+      state.idTournament = action.payload.idTournament;
       switch (action.payload.tournamentSystem) {
         case "League": {
           state.qualification = {
@@ -62,6 +64,11 @@ export const tournamentReducer = (state = initialState, action) => {
           ...state.teams,
           ...action.payload,
         ],
+      };
+    case CLEAR_TEAMS:
+      return {
+        ...state,
+        teams: [],
       };
     case MIX_TEAMS:
       return {

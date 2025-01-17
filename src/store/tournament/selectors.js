@@ -6,3 +6,4 @@ export const selectQualification = (state) => state.tournament.qualification;
 export const selectGroupStage = (state) => state.tournament.qualification.groupStage;
 export const selectPlayOff = (state) => state.tournament.qualification.playOff;
 export const selectSettings = (state) => state.tournament.settings;
+export const selectIdTournament = (state) => state.tournament.idTournament;

@@ -1,5 +1,6 @@
 export const ADD_SETTINGS = "SETTINGS::ADD_SETTINGS";
 export const ADD_TEAMS = "TEAMS::ADD_TEAMS";
+export const CLEAR_TEAMS = "TEAMS::CLEAR_TEAMS";
 export const MIX_TEAMS = "TEAMS::MIX_TEAMS";
 export const ADD_GROUPS = "GROUPS::ADD_GROUPS";
 export const ADD_MATCHES = "MATCHES::ADD_MATCHES";
@@ -16,6 +17,10 @@ export const addSettings = (settings) => ({
 export const addTeams = (teams) => ({
   type: ADD_TEAMS,
   payload: teams,
+});
+
+export const clearTeams = () => ({
+  type: CLEAR_TEAMS,
 });
 
 export const mixTeams = (mix) => ({

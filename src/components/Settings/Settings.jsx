@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import style from "./Settings.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { addGroups, addMatches, addPlayOff, addSettings, addTeams, mixTeams } from "../../store/tournament/actions";
+import { addGroups, addMatches, addPlayOff, addSettings, addTeams, clearTeams, mixTeams } from "../../store/tournament/actions";
 import { addRandomTeams, getRandomInt, shuffle } from "../../utils/functions";
 import { selectGroupNames, selectTeams, selectTournament } from "../../store/tournament/selectors";
 
-export const Settings = ({ openTournament }) => {
+export const Settings = () => {
   const dispatch = useDispatch();
   const teams = useSelector(selectTeams);
   const groupNames = useSelector(selectGroupNames);
@@ -13,9 +13,9 @@ export const Settings = ({ openTournament }) => {
 
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [tournamentSystem, setTournamentSystem] = useState("");
-  const [teamsCount, setTeamsCount] = useState(3);
-  const [teamsInGroup, setTeamsInGroup] = useState(3);
+  const [tournamentSystem, setTournamentSystem] = useState("League");
+  const [teamsCount, setTeamsCount] = useState(8);
+  const [teamsInGroup, setTeamsInGroup] = useState(4);
   const [rangeCircle, setRangeCircle] = useState(1);
   const [threePlace, setThreePlace] = useState(false);
   const [teamName, setTeamName] = useState("");
@@ -117,6 +117,10 @@ export const Settings = ({ openTournament }) => {
     dispatch(addTeams(randomTeams));
   };
 
+  const handleAddClearTeams = () => {
+    dispatch(clearTeams());
+  };
+
   const handleMixTeams = () => {
     const mix = shuffle(teams);
     dispatch(mixTeams(mix));
@@ -126,6 +130,7 @@ export const Settings = ({ openTournament }) => {
     e.preventDefault();
 
     const settings = {
+      idTournament: Date.now(),
       title,
       desc,
       teamsCount,
@@ -138,7 +143,6 @@ export const Settings = ({ openTournament }) => {
 
     dispatch(addSettings(settings));
     handleGetGroups(settings.groupsCount);
-    openTournament();
   };
 
   useEffect(() => {
@@ -283,9 +287,10 @@ export const Settings = ({ openTournament }) => {
           </div>
           <div>
             <div>
-              <button type="button" onClick={handleAddTeam}>Добавить</button>
-              <button type="button" onClick={handleAddRandomTeams}>Заполнить</button>
-              <button type="button" onClick={handleMixTeams}>Перемешать</button>
+              <button type="button" onClick={handleAddTeam} disabled={teams.length === teamsCount | !teamName}>Добавить</button>
+              <button type="button" onClick={handleAddRandomTeams} disabled={teams.length === teamsCount}>Заполнить</button>
+              <button type="button" onClick={handleAddClearTeams} disabled={!teams.length}>Очистить</button>
+              <button type="button" onClick={handleMixTeams} disabled={!teams.length}>Перемешать</button>
             </div>
             <div>
             <button type="submit">Создать турнир</button>
