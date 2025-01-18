@@ -11,17 +11,15 @@ const App = () => {
 
   return (
     <div className="App">
-      <div className="App__wrapper">
-        <Header />
-        <div className="App__wrapper-top center">
-          {checkCreate === null ? (
-            <Settings />
-          ) : (
-            <Tournament />
-          )}
-        </div>
-        <Footer />
-      </div>
+      <Header />
+      <main className="App__main">
+        {checkCreate === null ? (
+          <Settings />
+        ) : (
+          <Tournament />
+        )}
+      </main>
+      <Footer />
     </div>
   );
 };

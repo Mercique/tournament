@@ -11,9 +11,12 @@ export const Match = ({ match, matchId }) => {
   const [openButton, setOpenButton] = useState(true);
 
   const handleSetStat = (status) => {
+    if (match.status) return;
+    
     const matchInfo = {
       ...match,
       matchId,
+      status: true,
       teamSide: {
         home: {},
         visit: {},

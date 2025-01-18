@@ -43,20 +43,18 @@ input::-webkit-inner-spin-button {
   padding-right: calc(50% - 900px);
 }
 
-.App {
-  background-color: #111112;
+html, body {
+  height: 100%;
 }
 
-.App__wrapper {
+.App {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: #111112;
 }
 
-.App__wrapper-top {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+main {
   flex-grow: 1;
-  position: relative;
+  margin: 40px auto;
 }

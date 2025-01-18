@@ -212,6 +212,8 @@ export const tournamentReducer = (state = initialState, action) => {
       };
     }
     case ADD_MATCHES:
+      console.log(action.payload);
+      
       if (!state.qualification[action.payload.stage].matches[action.payload.tourName]) {
         state.qualification[action.payload.stage].matches[action.payload.tourName] = [];
       }

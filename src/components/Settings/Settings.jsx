@@ -34,6 +34,7 @@ export const Settings = () => {
           }
 
           const matchTour = {
+            status: false,
             teamSide: {
               home: {},
               visit: {},
@@ -293,7 +294,7 @@ export const Settings = () => {
               <button type="button" onClick={handleMixTeams} disabled={!teams.length}>Перемешать</button>
             </div>
             <div>
-            <button type="submit">Создать турнир</button>
+            <button type="submit" disabled={teams.length < teamsCount}>Создать турнир</button>
             <button type="button" onClick={() => console.log(tournament)}>log</button>
             </div>
           </div>

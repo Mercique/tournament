@@ -11,9 +11,15 @@ export const Tournament = () => {
 
   const [openStage, setOpenStage] = useState(true);
 
+  const handleClearLocalStorage = () => {
+    localStorage.clear();
+    location.reload();
+  };
+
   return (
     <div className={style.tournament}>
       <button type="button" onClick={() => console.log(tournament)}>log</button>
+      <button type="button" onClick={handleClearLocalStorage}>clear cookie</button>
       {tournament.settings.groupsCount > 1 && (
         <div>
           <button type="button" id="openTable" onClick={() => setOpenStage(true)}>Table</button>
